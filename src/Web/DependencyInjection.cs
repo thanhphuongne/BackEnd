@@ -21,7 +21,7 @@ public static class DependencyInjection
 
         builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
-        builder.Services.AddRazorPages();
+
 
         // Customise default API behaviour
         builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -31,8 +31,34 @@ public static class DependencyInjection
 
         builder.Services.AddOpenApiDocument((configure, sp) =>
         {
-            configure.Title = "BackEnd API";
+            configure.Title = "Sports Booking Management API";
+            configure.Description = "Backend API for managing sports facility bookings";
+        });
 
+        // Add CORS configuration
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontendApps", policy =>
+            {
+                // Get allowed origins from configuration
+                var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+                    ?? new[] { "http://localhost:3000", "http://localhost:3001" }; // Default development URLs
+
+                policy.WithOrigins(allowedOrigins)
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                      .SetIsOriginAllowedToAllowWildcardSubdomains();
+            });
+
+            // Alternative policy for development (more permissive)
+            options.AddPolicy("DevelopmentCors", policy =>
+            {
+                policy.SetIsOriginAllowed(origin => true) // Allow any origin in development
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials();
+            });
         });
     }
 
