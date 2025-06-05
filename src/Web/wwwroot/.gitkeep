@@ -1,0 +1,2 @@
+# This file keeps the wwwroot directory in git
+# The wwwroot directory is required by ASP.NET Core even for pure APIs

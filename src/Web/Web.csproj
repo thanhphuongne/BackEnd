@@ -3,6 +3,8 @@
   <PropertyGroup>
     <RootNamespace>BackEnd.Web</RootNamespace>
     <AssemblyName>BackEnd.Web</AssemblyName>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <ItemGroup>
