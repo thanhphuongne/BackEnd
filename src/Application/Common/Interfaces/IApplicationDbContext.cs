@@ -14,5 +14,13 @@ public interface IApplicationDbContext
 
     DbSet<Booking> Bookings { get; }
 
+    DbSet<Equipment> Equipment { get; }
+
+    DbSet<TeamMatch> TeamMatches { get; }
+
+    DbSet<Payment> Payments { get; }
+
+    DbSet<Notification> Notifications { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

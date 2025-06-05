@@ -21,6 +21,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Booking> Bookings => Set<Booking>();
 
+    public DbSet<Equipment> Equipment => Set<Equipment>();
+
+    public DbSet<TeamMatch> TeamMatches => Set<TeamMatch>();
+
+    public DbSet<Payment> Payments => Set<Payment>();
+
+    public DbSet<Notification> Notifications => Set<Notification>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
