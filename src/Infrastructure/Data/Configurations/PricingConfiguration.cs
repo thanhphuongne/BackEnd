@@ -8,24 +8,26 @@ public class PricingConfiguration : IEntityTypeConfiguration<Pricing>
 {
     public void Configure(EntityTypeBuilder<Pricing> builder)
     {
-        builder.HasKey(p => p.PricingID);
-        
-        builder.Property(p => p.DayOfWeek)
-            .HasMaxLength(20)
-            .IsRequired();
-            
         builder.Property(p => p.PricePerHour)
-            .HasPrecision(10, 2);
-            
-        // Change cascade delete behavior to restrict
+            .HasColumnType("decimal(18,2)")
+            .IsRequired();
+
+        builder.Property(p => p.DayOfWeek)
+            .HasConversion<int>();
+
+        // Foreign key relationships
         builder.HasOne(p => p.Sport)
             .WithMany(s => s.Pricings)
-            .HasForeignKey(p => p.SportID)
-            .OnDelete(DeleteBehavior.Restrict);
-            
+            .HasForeignKey(p => p.SportId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasOne(p => p.Field)
             .WithMany(f => f.Pricings)
-            .HasForeignKey(p => p.FieldID)
+            .HasForeignKey(p => p.FieldId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Composite unique index to prevent duplicate pricing for same field/sport/day/time
+        builder.HasIndex(p => new { p.SportId, p.FieldId, p.DayOfWeek, p.StartTime, p.EndTime })
+            .IsUnique();
     }
 }

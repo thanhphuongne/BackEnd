@@ -8,29 +8,29 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(u => u.UserID);
-        
         builder.Property(u => u.UserName)
-            .HasMaxLength(100)
+            .HasMaxLength(50)
             .IsRequired();
-            
+
         builder.Property(u => u.Password)
-            .HasMaxLength(100)
+            .HasMaxLength(255)
             .IsRequired();
-            
+
         builder.Property(u => u.Phone)
-            .HasMaxLength(20)
-            .IsRequired();
-            
+            .HasMaxLength(20);
+
         builder.Property(u => u.Email)
             .HasMaxLength(100)
             .IsRequired();
-            
+
         builder.Property(u => u.Role)
             .HasMaxLength(50)
             .IsRequired();
-            
-        // Set table name to avoid conflict with ASP.NET Identity Users table
-        builder.ToTable("AppUsers");
+
+        builder.HasIndex(u => u.UserName)
+            .IsUnique();
+
+        builder.HasIndex(u => u.Email)
+            .IsUnique();
     }
 }

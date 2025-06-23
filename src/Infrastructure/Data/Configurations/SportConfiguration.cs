@@ -8,13 +8,14 @@ public class SportConfiguration : IEntityTypeConfiguration<Sport>
 {
     public void Configure(EntityTypeBuilder<Sport> builder)
     {
-        builder.HasKey(s => s.SportID);
-        
         builder.Property(s => s.SportName)
             .HasMaxLength(100)
             .IsRequired();
-            
+
         builder.Property(s => s.Description)
             .HasMaxLength(500);
+
+        builder.HasIndex(s => s.SportName)
+            .IsUnique();
     }
 }

@@ -12,8 +12,10 @@ public class LookupDto
     {
         public Mapping()
         {
-            CreateMap<TodoList, LookupDto>();
-            CreateMap<TodoItem, LookupDto>();
+            CreateMap<Sport, LookupDto>()
+                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.SportName));
+            CreateMap<Field, LookupDto>()
+                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.FieldName));
         }
     }
 }

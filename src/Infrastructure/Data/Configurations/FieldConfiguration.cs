@@ -8,22 +8,26 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
 {
     public void Configure(EntityTypeBuilder<Field> builder)
     {
-        builder.HasKey(f => f.FieldID);
-        
         builder.Property(f => f.FieldName)
             .HasMaxLength(100)
             .IsRequired();
-            
+
         builder.Property(f => f.Location)
-            .HasMaxLength(200)
-            .IsRequired();
-            
+            .HasMaxLength(200);
+
         builder.Property(f => f.Description)
             .HasMaxLength(500);
-            
-        // Keep cascade delete for this relationship
+
+        builder.Property(f => f.IsActive)
+            .HasDefaultValue(true);
+
+        // Foreign key relationship
         builder.HasOne(f => f.Sport)
             .WithMany(s => s.Fields)
-            .HasForeignKey(f => f.SportID);
+            .HasForeignKey(f => f.SportId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(f => new { f.SportId, f.FieldName })
+            .IsUnique();
     }
 }

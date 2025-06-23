@@ -20,7 +20,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.InitialiseDatabaseAsync();
+    // Only initialize database if not running for code generation (NSwag, etc.)
+    var skipDbInit = builder.Configuration.GetValue<bool>("SkipDatabaseInitialization");
+    if (!skipDbInit)
+    {
+        try
+        {
+            await app.InitialiseDatabaseAsync();
+        }
+        catch (Exception ex)
+        {
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning(ex, "Database initialization failed. This is expected during build-time code generation.");
+        }
+    }
 }
 else
 {
@@ -30,17 +43,22 @@ else
 
 app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+// Configure CORS
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("DevelopmentCors"); // More permissive for development
+}
+else
+{
+    app.UseCors("AllowFrontendApps"); // Strict policy for production
+}
 
 app.UseSwaggerUi(settings =>
 {
     settings.Path = "/api";
     settings.DocumentPath = "/api/specification.json";
 });
-
-app.MapRazorPages();
-
-app.MapFallbackToFile("index.html");
 
 app.UseExceptionHandler(options => { });
 

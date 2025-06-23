@@ -1,71 +1,73 @@
-﻿# BackEnd
+﻿# Sports Booking Management System - Backend API
 
-The project was generated using the [Clean.Architecture.Solution.Template](https://github.com/jasontaylordev/CleanArchitecture) version 9.0.8.
+A clean architecture .NET 8 Web API for managing sports facility bookings. This backend system provides comprehensive functionality for sports booking management including sports, fields, users, pricing, and bookings.
+
+## Features
+
+- **Sports Management**: Create and manage different types of sports
+- **Field Management**: Manage sports fields with capacity, location, and availability
+- **User Management**: Handle customer and staff user accounts
+- **Dynamic Pricing**: Configure pricing by sport, field, day of week, and time slots
+- **Booking System**: Complete booking management with status tracking
+- **Clean Architecture**: Follows clean architecture principles with clear separation of concerns
+- **Entity Framework Core**: SQL Server database with code-first migrations
+- **OpenAPI/Swagger**: Comprehensive API documentation
+
+## Database Entities
+
+- **Sports**: Football, Basketball, Tennis, Volleyball, Badminton, etc.
+- **Fields**: Sports venues with location, capacity, and availability status
+- **Users**: Customer and staff accounts with role-based access
+- **Pricing**: Flexible pricing rules by sport, field, day, and time
+- **Bookings**: Reservation management with status tracking
 
 ## Build
 
-Run `dotnet build -tl` to build the solution.
+Run `dotnet build` to build the solution.
 
 ## Run
 
-To run the web application:
-
-```bash
-cd .\src\Web\
-dotnet watch run
-```
-
-Navigate to https://localhost:5001. The application will automatically reload if you change any of the source files.
-
-## Code Styles & Formatting
-
-The template includes [EditorConfig](https://editorconfig.org/) support to help maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs. The **.editorconfig** file defines the coding styles applicable to this solution.
-
-## Code Scaffolding
-
-The template includes support to scaffold new commands and queries.
-
-Start in the `.\src\Application\` folder.
-
-Create a new command:
-
-```
-dotnet new ca-usecase --name CreateTodoList --feature-name TodoLists --usecase-type command --return-type int
-```
-
-Create a new query:
-
-```
-dotnet new ca-usecase -n GetTodos -fn TodoLists -ut query -rt TodosVm
-```
-
-If you encounter the error *"No templates or subcommands found matching: 'ca-usecase'."*, install the template and try again:
-
-```bash
-dotnet new install Clean.Architecture.Solution.Template::9.0.8
-```
-
-## Test
-
-The solution contains unit, integration, functional, and acceptance tests.
-
-To run the unit, integration, and functional tests (excluding acceptance tests):
-```bash
-dotnet test --filter "FullyQualifiedName!~AcceptanceTests"
-```
-
-To run the acceptance tests, first start the application:
+To run the web API:
 
 ```bash
 cd .\src\Web\
 dotnet run
 ```
 
-Then, in a new console, run the tests:
-```bash
-cd .\src\Web\
-dotnet test
-```
+Navigate to https://localhost:5001/swagger to access the API documentation.
 
-## Help
-To learn more about the template go to the [project website](https://github.com/jasontaylordev/CleanArchitecture). Here you can find additional guidance, request new features, report a bug, and discuss the template with other users.
+## Database Setup
+
+1. **Update Connection String**: Configure your SQL Server connection in `src/Web/appsettings.Development.json`
+2. **Apply Migrations**: Run `dotnet ef database update --project src/Infrastructure --startup-project src/Web`
+3. **Sample Data**: The application will automatically seed sample sports, fields, users, and pricing data
+
+For detailed database setup instructions, see [DATABASE_SETUP_GUIDE.md](DATABASE_SETUP_GUIDE.md).
+
+## API Endpoints
+
+The API provides endpoints for:
+- `/api/sports` - Sports management
+- `/api/fields` - Field management
+- `/api/users` - User management
+- `/api/pricing` - Pricing configuration
+- `/api/bookings` - Booking operations
+
+## Architecture
+
+This project follows Clean Architecture principles:
+- **Domain**: Core business entities and logic
+- **Application**: Use cases and business rules
+- **Infrastructure**: Data access and external services
+- **Web**: API controllers and presentation layer
+
+## Technology Stack
+
+- .NET 8
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- AutoMapper
+- FluentValidation
+- MediatR
+- NSwag (OpenAPI/Swagger)
