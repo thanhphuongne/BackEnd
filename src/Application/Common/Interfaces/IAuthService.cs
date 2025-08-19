@@ -1,0 +1,12 @@
+using BackEnd.Application.DTOs.Auth;
+
+namespace BackEnd.Application.Common.Interfaces;
+
+public interface IAuthService
+{
+    Task<AuthResponse?> LoginAsync(LoginRequest request);
+    Task<AuthResponse?> RegisterAsync(RegisterRequest request);
+    Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
+    Task<UserProfileDto?> GetUserProfileAsync(string userId);
+    Task<bool> ChangePasswordAsync(string userId, ChangePasswordRequest request);
+}
