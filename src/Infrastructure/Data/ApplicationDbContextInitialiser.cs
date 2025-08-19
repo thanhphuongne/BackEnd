@@ -119,15 +119,15 @@ public class ApplicationDbContextInitialiser
             _context.Fields.AddRange(fields);
             await _context.SaveChangesAsync();
 
-            // Add sample users
-            var users = new[]
+            // Add sample customers
+            var customers = new[]
             {
-                new User { UserName = "john_doe", Password = "password123", Phone = "+1234567891", Email = "john.doe@email.com", Role = "Customer" },
-                new User { UserName = "jane_smith", Password = "password123", Phone = "+1234567892", Email = "jane.smith@email.com", Role = "Customer" },
-                new User { UserName = "manager1", Password = "manager123", Phone = "+1234567893", Email = "manager1@sportsbooking.com", Role = "Manager" }
+                new Customer { UserName = "john_doe", Password = "password123", Phone = "+1234567891", Email = "john.doe@email.com", Role = "Customer" },
+                new Customer { UserName = "jane_smith", Password = "password123", Phone = "+1234567892", Email = "jane.smith@email.com", Role = "Customer" },
+                new Customer { UserName = "manager1", Password = "manager123", Phone = "+1234567893", Email = "manager1@sportsbooking.com", Role = "Manager" }
             };
 
-            _context.CustomUsers.AddRange(users);
+            _context.Customers.AddRange(customers);
             await _context.SaveChangesAsync();
 
             // Add sample pricing data

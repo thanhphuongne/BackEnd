@@ -19,7 +19,7 @@ public class Booking : BaseAuditableEntity
     public string Status { get; set; } = "Pending";
     
     // Navigation properties
-    public User Customer { get; set; } = null!;
+    public Customer Customer { get; set; } = null!;
     
     public Field Field { get; set; } = null!;
     

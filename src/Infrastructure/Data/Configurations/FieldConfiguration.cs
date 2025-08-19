@@ -8,6 +8,8 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
 {
     public void Configure(EntityTypeBuilder<Field> builder)
     {
+        builder.ToTable("Fields");
+
         builder.Property(f => f.FieldName)
             .HasMaxLength(100)
             .IsRequired();
@@ -25,7 +27,7 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
         builder.HasOne(f => f.Sport)
             .WithMany(s => s.Fields)
             .HasForeignKey(f => f.SportId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(f => new { f.SportId, f.FieldName })
             .IsUnique();

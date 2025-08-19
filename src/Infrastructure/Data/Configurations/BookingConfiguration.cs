@@ -8,6 +8,8 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)
     {
+        builder.ToTable("Bookings");
+
         builder.Property(b => b.TotalPrice)
             .HasColumnType("decimal(18,2)")
             .IsRequired();
@@ -23,7 +25,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
         // Foreign key relationships
         builder.HasOne(b => b.Customer)
-            .WithMany(u => u.Bookings)
+            .WithMany(c => c.Bookings)
             .HasForeignKey(b => b.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
 

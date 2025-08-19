@@ -21,107 +21,76 @@ Input.Email={{Email}}&Input.Password={{Password}}&__RequestVerificationToken={{R
 
 ###
 
-# GET WeatherForecast
-GET {{Web_HostAddress}}/api/WeatherForecasts
+# GET Sports
+GET {{Web_HostAddress}}/api/sports
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 
 ###
 
-# GET TodoLists
-GET {{Web_HostAddress}}/api/TodoLists
-Cookie: {{AuthCookieName}}={{AuthCookieValue}}
-
-###
-
-#GET TodoList
-GET {{Web_HostAddress}}/api/TodoLists/1
-Cookie: {{AuthCookieName}}={{AuthCookieValue}}
-
-###
-
-# POST TodoLists
-POST {{Web_HostAddress}}/api/TodoLists
+# POST Sports
+POST {{Web_HostAddress}}/api/sports
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 Content-Type: application/json
 
-// CreateTodoListCommand
 {
-  "Title": "Backlog"
+  "SportName": "Football",
+  "Description": "Association football"
 }
 
 ###
 
-# PUT TodoLists
-PUT {{Web_HostAddress}}/api/TodoLists/1
+# GET Fields
+GET {{Web_HostAddress}}/api/fields
+Cookie: {{AuthCookieName}}={{AuthCookieValue}}
+
+###
+
+# POST Fields
+POST {{Web_HostAddress}}/api/fields
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 Content-Type: application/json
 
-// UpdateTodoListCommand
 {
-  "Id": 1,
-  "Title": "Product Backlog"
+  "SportId": 1,
+  "FieldName": "Field A",
+  "Location": "Main Stadium",
+  "Capacity": 22,
+  "Description": "Main football field"
 }
 
 ###
 
-# DELETE TodoLists
-DELETE {{Web_HostAddress}}/api/TodoLists/1
+# GET Bookings
+GET {{Web_HostAddress}}/api/bookings
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 
 ###
 
-# GET TodoItems
-@PageNumber = 1
-@PageSize = 10
-GET {{Web_HostAddress}}/api/TodoItems?ListId=1&PageNumber={{PageNumber}}&PageSize={{PageSize}}
-Cookie: {{AuthCookieName}}={{AuthCookieValue}}
-
-###
-
-# POST TodoItems
-POST {{Web_HostAddress}}/api/TodoItems
+# POST Bookings
+POST {{Web_HostAddress}}/api/bookings
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 Content-Type: application/json
 
-// CreateTodoItemCommand
 {
-  "ListId": 1,
-  "Title": "Eat a burrito 🌯"
+  "CustomerId": 1,
+  "FieldId": 1,
+  "SportId": 1,
+  "BookingDate": "2024-12-25",
+  "StartTime": "10:00:00",
+  "EndTime": "12:00:00",
+  "TotalPrice": 100.00
 }
 
 ###
 
-#PUT TodoItems UpdateItemDetails
-PUT {{Web_HostAddress}}/api/TodoItems/UpdateItemDetails?Id=1
+# GET Users
+GET {{Web_HostAddress}}/api/users
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
-Content-Type: application/json
-
-// UpdateTodoItemDetailCommand
-{
-  "Id": 1,
-  "ListId": 1,
-  "Priority": 3,
-  "Note": "This is a good idea!"
-}
 
 ###
 
-# PUT TodoItems
-PUT {{Web_HostAddress}}/api/TodoItems/1
-Cookie: {{AuthCookieName}}={{AuthCookieValue}}
-Content-Type: application/json
-
-// UpdateTodoItemCommand
-{
-  "Id": 1,
-  "Title": "Eat a yummy burrito 🌯",
-  "Done": true
-}
-
-###
-
-# DELETE TodoItem
-DELETE {{Web_HostAddress}}/api/TodoItems/1
+# GET Pricing
+GET {{Web_HostAddress}}/api/pricing
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 
 ###

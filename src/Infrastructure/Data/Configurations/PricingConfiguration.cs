@@ -8,6 +8,8 @@ public class PricingConfiguration : IEntityTypeConfiguration<Pricing>
 {
     public void Configure(EntityTypeBuilder<Pricing> builder)
     {
+        builder.ToTable("Pricing");
+
         builder.Property(p => p.PricePerHour)
             .HasColumnType("decimal(18,2)")
             .IsRequired();
@@ -19,7 +21,7 @@ public class PricingConfiguration : IEntityTypeConfiguration<Pricing>
         builder.HasOne(p => p.Sport)
             .WithMany(s => s.Pricings)
             .HasForeignKey(p => p.SportId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(p => p.Field)
             .WithMany(f => f.Pricings)

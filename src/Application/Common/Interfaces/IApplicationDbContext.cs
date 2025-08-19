@@ -8,7 +8,7 @@ public interface IApplicationDbContext
 
     DbSet<Field> Fields { get; }
 
-    DbSet<User> CustomUsers { get; }
+    DbSet<Customer> Customers { get; }
 
     DbSet<Pricing> Pricings { get; }
 

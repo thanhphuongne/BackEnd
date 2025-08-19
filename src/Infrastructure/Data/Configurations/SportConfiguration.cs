@@ -8,6 +8,8 @@ public class SportConfiguration : IEntityTypeConfiguration<Sport>
 {
     public void Configure(EntityTypeBuilder<Sport> builder)
     {
+        builder.ToTable("Sports");
+
         builder.Property(s => s.SportName)
             .HasMaxLength(100)
             .IsRequired();

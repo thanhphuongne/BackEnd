@@ -1,6 +1,6 @@
 namespace BackEnd.Domain.Entities;
 
-public class User : BaseAuditableEntity
+public class Customer : BaseAuditableEntity
 {
     public string UserName { get; set; } = null!;
     
