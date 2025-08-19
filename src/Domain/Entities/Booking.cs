@@ -1,27 +1,28 @@
+using BackEnd.Domain.Enums;
+
 namespace BackEnd.Domain.Entities;
 
 public class Booking : BaseAuditableEntity
 {
-    public int CustomerId { get; set; }
-    
+    public int UserId { get; set; }
+
     public int FieldId { get; set; }
-    
-    public int SportId { get; set; }
-    
-    public DateTime BookingDate { get; set; }
-    
-    public TimeSpan StartTime { get; set; }
-    
-    public TimeSpan EndTime { get; set; }
-    
+
+    public DateTime StartTime { get; set; }
+
+    public DateTime EndTime { get; set; }
+
+    public BookingStatus Status { get; set; }
+
     public decimal TotalPrice { get; set; }
-    
-    public string Status { get; set; } = "Pending";
-    
+
+    public PaymentStatus PaymentStatus { get; set; }
+
+    public DateTime? ModifiedAt { get; set; }
+
     // Navigation properties
-    public Customer Customer { get; set; } = null!;
-    
+    public User User { get; set; } = null!;
     public Field Field { get; set; } = null!;
-    
-    public Sport Sport { get; set; } = null!;
+    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public Review? Review { get; set; }
 }

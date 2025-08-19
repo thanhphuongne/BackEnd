@@ -1,23 +1,32 @@
+using BackEnd.Domain.Enums;
+
 namespace BackEnd.Domain.Entities;
 
 public class Field : BaseAuditableEntity
 {
-    public int SportId { get; set; }
-    
+    public int BusinessId { get; set; }
+
     public string FieldName { get; set; } = null!;
-    
-    public string? Location { get; set; }
-    
-    public int? Capacity { get; set; }
-    
+
+    public SportType SportType { get; set; }
+
+    public string Address { get; set; } = null!;
+
     public string? Description { get; set; }
-    
+
+    public string? Photos { get; set; } // JSON string
+
+    public string? OperatingHours { get; set; } // JSON string
+
+    public decimal BasePrice { get; set; }
+
     public bool IsActive { get; set; } = true;
-    
+
     // Navigation properties
-    public Sport Sport { get; set; } = null!;
-    
-    public ICollection<Pricing> Pricings { get; set; } = new List<Pricing>();
-    
+    public Business Business { get; set; } = null!;
+    public ICollection<FieldAvailability> FieldAvailabilities { get; set; } = new List<FieldAvailability>();
+    public ICollection<PricingRule> PricingRules { get; set; } = new List<PricingRule>();
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public ICollection<Match> Matches { get; set; } = new List<Match>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
 }

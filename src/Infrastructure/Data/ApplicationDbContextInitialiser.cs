@@ -87,74 +87,15 @@ public class ApplicationDbContextInitialiser
         }
 
         // Default data
-        // Seed sports booking data if necessary
-        if (!_context.Sports.Any())
-        {
-            var sports = new[]
-            {
-                new Sport { SportName = "Football", Description = "Association football, also known as soccer" },
-                new Sport { SportName = "Basketball", Description = "Team sport played on a court with hoops" },
-                new Sport { SportName = "Tennis", Description = "Racket sport played on a court" },
-                new Sport { SportName = "Volleyball", Description = "Team sport played with a net" },
-                new Sport { SportName = "Badminton", Description = "Racket sport played with shuttlecock" }
-            };
+        // Seed sample data for the new schema
+        await SeedSampleDataAsync();
 
-            _context.Sports.AddRange(sports);
-            await _context.SaveChangesAsync();
+    }
 
-            // Add fields for each sport
-            var fields = new[]
-            {
-                new Field { SportId = sports[0].Id, FieldName = "Main Football Field", Location = "North Campus", Capacity = 22, Description = "Full-size football field with grass surface", IsActive = true },
-                new Field { SportId = sports[0].Id, FieldName = "Training Field A", Location = "South Campus", Capacity = 16, Description = "Smaller training field", IsActive = true },
-                new Field { SportId = sports[1].Id, FieldName = "Basketball Court 1", Location = "Sports Center", Capacity = 10, Description = "Indoor basketball court", IsActive = true },
-                new Field { SportId = sports[1].Id, FieldName = "Basketball Court 2", Location = "Sports Center", Capacity = 10, Description = "Indoor basketball court", IsActive = true },
-                new Field { SportId = sports[2].Id, FieldName = "Tennis Court 1", Location = "Tennis Complex", Capacity = 4, Description = "Hard court surface", IsActive = true },
-                new Field { SportId = sports[2].Id, FieldName = "Tennis Court 2", Location = "Tennis Complex", Capacity = 4, Description = "Clay court surface", IsActive = true },
-                new Field { SportId = sports[3].Id, FieldName = "Volleyball Court", Location = "Sports Center", Capacity = 12, Description = "Indoor volleyball court", IsActive = true },
-                new Field { SportId = sports[4].Id, FieldName = "Badminton Court 1", Location = "Sports Center", Capacity = 4, Description = "Indoor badminton court", IsActive = true },
-                new Field { SportId = sports[4].Id, FieldName = "Badminton Court 2", Location = "Sports Center", Capacity = 4, Description = "Indoor badminton court", IsActive = true }
-            };
-
-            _context.Fields.AddRange(fields);
-            await _context.SaveChangesAsync();
-
-            // Add sample customers
-            var customers = new[]
-            {
-                new Customer { UserName = "john_doe", Password = "password123", Phone = "+1234567891", Email = "john.doe@email.com", Role = "Customer" },
-                new Customer { UserName = "jane_smith", Password = "password123", Phone = "+1234567892", Email = "jane.smith@email.com", Role = "Customer" },
-                new Customer { UserName = "manager1", Password = "manager123", Phone = "+1234567893", Email = "manager1@sportsbooking.com", Role = "Manager" }
-            };
-
-            _context.Customers.AddRange(customers);
-            await _context.SaveChangesAsync();
-
-            // Add sample pricing data
-            var pricings = new[]
-            {
-                // Football - Weekdays
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Monday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 50.00m },
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Tuesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 50.00m },
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Wednesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 50.00m },
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 50.00m },
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 50.00m },
-                // Football - Weekends
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 75.00m },
-                new Pricing { SportId = sports[0].Id, FieldId = fields[0].Id, DayOfWeek = DayOfWeek.Sunday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(17, 0, 0), PricePerHour = 75.00m },
-                // Basketball - Weekdays
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Monday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 30.00m },
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Tuesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 30.00m },
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Wednesday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 30.00m },
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 30.00m },
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 30.00m },
-                // Basketball - Weekends
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 45.00m },
-                new Pricing { SportId = sports[1].Id, FieldId = fields[2].Id, DayOfWeek = DayOfWeek.Sunday, StartTime = new TimeSpan(9, 0, 0), EndTime = new TimeSpan(22, 0, 0), PricePerHour = 45.00m }
-            };
-
-            _context.Pricings.AddRange(pricings);
-            await _context.SaveChangesAsync();
-        }
+    private async Task SeedSampleDataAsync()
+    {
+        // For now, just create a minimal seed
+        // We'll add comprehensive seeding later after the migration is working
+        await Task.CompletedTask;
     }
 }

@@ -83,8 +83,14 @@ Content-Type: application/json
 
 ###
 
-# GET Users
-GET {{Web_HostAddress}}/api/users
+# GET Customers
+GET {{Web_HostAddress}}/api/customer
+Cookie: {{AuthCookieName}}={{AuthCookieValue}}
+
+###
+
+# GET Customer by ID
+GET {{Web_HostAddress}}/api/customer/1
 Cookie: {{AuthCookieName}}={{AuthCookieValue}}
 
 ###

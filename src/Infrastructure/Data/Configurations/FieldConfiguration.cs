@@ -1,4 +1,5 @@
 using BackEnd.Domain.Entities;
+using BackEnd.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,22 +15,37 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(f => f.Location)
-            .HasMaxLength(200);
+        builder.Property(f => f.SportType)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Property(f => f.Address)
+            .HasColumnType("text")
+            .IsRequired();
 
         builder.Property(f => f.Description)
-            .HasMaxLength(500);
+            .HasColumnType("text");
+
+        builder.Property(f => f.Photos)
+            .HasColumnType("nvarchar(max)");
+
+        builder.Property(f => f.OperatingHours)
+            .HasColumnType("nvarchar(max)");
+
+        builder.Property(f => f.BasePrice)
+            .HasColumnType("decimal(10,2)")
+            .IsRequired();
 
         builder.Property(f => f.IsActive)
             .HasDefaultValue(true);
 
-        // Foreign key relationship
-        builder.HasOne(f => f.Sport)
-            .WithMany(s => s.Fields)
-            .HasForeignKey(f => f.SportId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // Indexes
+        builder.HasIndex(f => f.BusinessId);
 
-        builder.HasIndex(f => new { f.SportId, f.FieldName })
-            .IsUnique();
+        // Foreign key relationship
+        builder.HasOne(f => f.Business)
+            .WithMany(b => b.Fields)
+            .HasForeignKey(f => f.BusinessId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

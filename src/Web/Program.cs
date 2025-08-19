@@ -64,6 +64,7 @@ app.UseExceptionHandler(options => { });
 
 
 app.MapEndpoints();
+app.MapControllers();
 
 app.Run();
 

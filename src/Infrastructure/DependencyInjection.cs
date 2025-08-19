@@ -33,7 +33,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
         // Register application services
-        builder.Services.AddScoped<BackEnd.Application.Services.CustomerService>();
+        builder.Services.AddScoped<BackEnd.Application.Services.UserService>();
 
         builder.Services
             .AddDefaultIdentity<ApplicationUser>()

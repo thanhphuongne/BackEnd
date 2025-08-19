@@ -15,6 +15,9 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<IUser, CurrentUser>();
 
+        // Add controllers
+        builder.Services.AddControllers();
+
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();

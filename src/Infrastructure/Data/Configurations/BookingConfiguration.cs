@@ -1,4 +1,5 @@
 using BackEnd.Domain.Entities;
+using BackEnd.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,38 +11,42 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     {
         builder.ToTable("Bookings");
 
-        builder.Property(b => b.TotalPrice)
-            .HasColumnType("decimal(18,2)")
+        builder.Property(b => b.StartTime)
+            .IsRequired();
+
+        builder.Property(b => b.EndTime)
             .IsRequired();
 
         builder.Property(b => b.Status)
-            .HasMaxLength(50)
-            .HasDefaultValue("Pending")
+            .HasConversion<string>()
             .IsRequired();
 
-        builder.Property(b => b.BookingDate)
-            .HasColumnType("date")
+        builder.Property(b => b.TotalPrice)
+            .HasColumnType("decimal(10,2)")
             .IsRequired();
+
+        builder.Property(b => b.PaymentStatus)
+            .HasConversion<string>()
+            .IsRequired();
+
+        // Indexes
+        builder.HasIndex(b => b.UserId);
+        builder.HasIndex(b => b.FieldId);
 
         // Foreign key relationships
-        builder.HasOne(b => b.Customer)
-            .WithMany(c => c.Bookings)
-            .HasForeignKey(b => b.CustomerId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(b => b.User)
+            .WithMany(u => u.Bookings)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(b => b.Field)
             .WithMany(f => f.Bookings)
             .HasForeignKey(b => b.FieldId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(b => b.Sport)
-            .WithMany(s => s.Bookings)
-            .HasForeignKey(b => b.SportId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // Index for efficient querying
-        builder.HasIndex(b => new { b.FieldId, b.BookingDate, b.StartTime, b.EndTime });
-        builder.HasIndex(b => b.CustomerId);
-        builder.HasIndex(b => b.BookingDate);
+        builder.HasOne(b => b.Review)
+            .WithOne(r => r.Booking)
+            .HasForeignKey<Review>(r => r.BookingId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

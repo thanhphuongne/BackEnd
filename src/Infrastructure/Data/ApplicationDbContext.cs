@@ -12,15 +12,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<Sport> Sports => Set<Sport>();
-
+    public new DbSet<User> Users => Set<User>();
+    public DbSet<Business> Businesses => Set<Business>();
     public DbSet<Field> Fields => Set<Field>();
-
-    public DbSet<Customer> Customers => Set<Customer>();
-
-    public DbSet<Pricing> Pricings => Set<Pricing>();
-
+    public DbSet<FieldAvailability> FieldAvailabilities => Set<FieldAvailability>();
+    public DbSet<PricingRule> PricingRules => Set<PricingRule>();
     public DbSet<Booking> Bookings => Set<Booking>();
+    public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
+    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Match> Matches => Set<Match>();
+    public DbSet<MatchParticipant> MatchParticipants => Set<MatchParticipant>();
+    public DbSet<MatchChat> MatchChats => Set<MatchChat>();
+    public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<UserPreference> UserPreferences => Set<UserPreference>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

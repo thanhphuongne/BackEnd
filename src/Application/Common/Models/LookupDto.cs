@@ -12,10 +12,10 @@ public class LookupDto
     {
         public Mapping()
         {
-            CreateMap<Sport, LookupDto>()
-                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.SportName));
             CreateMap<Field, LookupDto>()
                 .ForMember(d => d.Title, opt => opt.MapFrom(s => s.FieldName));
+            CreateMap<User, LookupDto>()
+                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.FullName));
         }
     }
 }
