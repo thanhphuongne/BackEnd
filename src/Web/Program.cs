@@ -44,6 +44,21 @@ else
 app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 
+// Add HTTP request logging
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    var method = context.Request.Method;
+    var path = context.Request.Path;
+    var userAgent = context.Request.Headers.UserAgent.ToString();
+
+    logger.LogInformation("🌐 {Method} {Path} - User-Agent: {UserAgent}", method, path, userAgent);
+
+    await next();
+
+    logger.LogInformation("✅ {Method} {Path} - Response: {StatusCode}", method, path, context.Response.StatusCode);
+});
+
 // Configure CORS
 if (app.Environment.IsDevelopment())
 {

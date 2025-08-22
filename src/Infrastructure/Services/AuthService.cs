@@ -6,6 +6,7 @@ using BackEnd.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,29 +21,42 @@ public class AuthService : IAuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IApplicationDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthService> _logger;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IApplicationDbContext context,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<AuthService> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _context = context;
         _configuration = configuration;
+        _logger = logger;
     }
 
     public async Task<AuthResponse?> LoginAsync(LoginRequest request)
     {
+        _logger.LogInformation("🔍 AuthService: Looking up user by email: {Email}", request.Email);
+
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
+        {
+            _logger.LogWarning("❌ AuthService: User not found: {Email}", request.Email);
             return null;
+        }
 
+        _logger.LogInformation("🔐 AuthService: Checking password for user: {Email}", request.Email);
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (!result.Succeeded)
+        {
+            _logger.LogWarning("❌ AuthService: Password check failed for user: {Email}", request.Email);
             return null;
+        }
 
+        _logger.LogInformation("📝 AuthService: Updating last login for user: {Email}", request.Email);
         // Update last login
         var appUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (appUser != null)
@@ -51,16 +65,24 @@ public class AuthService : IAuthService
             await _context.SaveChangesAsync(CancellationToken.None);
         }
 
+        _logger.LogInformation("🎫 AuthService: Generating JWT token for user: {Email}", request.Email);
         return await GenerateAuthResponseAsync(user, appUser);
     }
 
     public async Task<AuthResponse?> RegisterAsync(RegisterRequest request)
     {
+        _logger.LogInformation("📝 AuthService: Registration attempt for email: {Email}, Name: {FullName}",
+            request.Email, request.FullName);
+
         // Check if user already exists
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
+        {
+            _logger.LogWarning("❌ AuthService: User already exists: {Email}", request.Email);
             return null;
+        }
 
+        _logger.LogInformation("👤 AuthService: Creating Identity user for: {Email}", request.Email);
         // Create Identity user
         var identityUser = new ApplicationUser
         {
@@ -71,8 +93,13 @@ public class AuthService : IAuthService
 
         var result = await _userManager.CreateAsync(identityUser, request.Password);
         if (!result.Succeeded)
+        {
+            _logger.LogError("❌ AuthService: Failed to create Identity user for: {Email}. Errors: {Errors}",
+                request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
             return null;
+        }
 
+        _logger.LogInformation("💾 AuthService: Creating business user record for: {Email}", request.Email);
         // Create business user
         var appUser = new User
         {
@@ -89,6 +116,7 @@ public class AuthService : IAuthService
         _context.Users.Add(appUser);
         await _context.SaveChangesAsync(CancellationToken.None);
 
+        _logger.LogInformation("✅ AuthService: User registration completed successfully for: {Email}", request.Email);
         return await GenerateAuthResponseAsync(identityUser, appUser);
     }
 
