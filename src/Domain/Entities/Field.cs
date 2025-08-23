@@ -6,11 +6,15 @@ public class Field : BaseAuditableEntity
 {
     public int BusinessId { get; set; }
 
+    public int VenueId { get; set; }
+
     public string FieldName { get; set; } = null!;
+
+    public string FieldNumber { get; set; } = null!; // "Field 1", "Court A", etc.
 
     public SportType SportType { get; set; }
 
-    public string Address { get; set; } = null!;
+    public string? Address { get; set; } // Optional, can inherit from venue
 
     public string? Description { get; set; }
 
@@ -24,6 +28,7 @@ public class Field : BaseAuditableEntity
 
     // Navigation properties
     public Business Business { get; set; } = null!;
+    public Venue Venue { get; set; } = null!;
     public ICollection<FieldAvailability> FieldAvailabilities { get; set; } = new List<FieldAvailability>();
     public ICollection<PricingRule> PricingRules { get; set; } = new List<PricingRule>();
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

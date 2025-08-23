@@ -132,6 +132,178 @@
 ]
 },
 {
+"name": "Booking",
+"item": [
+{
+"name": "Get Sports",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/sports",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "sports"]
+}
+}
+},
+{
+"name": "Get Venues",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/venues",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "venues"]
+}
+}
+},
+{
+"name": "Get Venues by Sport",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/venues?sportId=1",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "venues"],
+"query": [
+{
+"key": "sportId",
+"value": "1"
+}
+]
+}
+}
+},
+{
+"name": "Get Venue by ID",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/venues/1",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "venues", "1"]
+}
+}
+},
+{
+"name": "Get Fields by Venue",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/venues/1/fields",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "venues", "1", "fields"]
+}
+}
+},
+{
+"name": "Get All Fields",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/fields",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "fields"]
+}
+}
+},
+{
+"name": "Get Field Availability",
+"request": {
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/fields/1/availability?date=2025-08-20",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "fields", "1", "availability"],
+"query": [
+{
+"key": "date",
+"value": "2025-08-20"
+}
+]
+}
+}
+},
+{
+"name": "Create Booking",
+"request": {
+"auth": {
+"type": "bearer",
+"bearer": [
+{
+"key": "token",
+"value": "{{token}}",
+"type": "string"
+}
+]
+},
+"method": "POST",
+"header": [
+{
+"key": "Content-Type",
+"value": "application/json"
+}
+],
+"body": {
+"mode": "raw",
+"raw": "{\n  \"fieldId\": 1,\n  \"startTime\": \"2025-08-20T10:00:00\",\n  \"endTime\": \"2025-08-20T11:00:00\"\n}"
+},
+"url": {
+"raw": "https://localhost:5001/api/booking/bookings",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "bookings"]
+}
+}
+},
+{
+"name": "Get My Bookings",
+"request": {
+"auth": {
+"type": "bearer",
+"bearer": [
+{
+"key": "token",
+"value": "{{token}}",
+"type": "string"
+}
+]
+},
+"method": "GET",
+"header": [],
+"url": {
+"raw": "https://localhost:5001/api/booking/bookings/my",
+"protocol": "https",
+"host": ["localhost"],
+"port": "5001",
+"path": ["api", "booking", "bookings", "my"]
+}
+}
+}
+]
+},
+{
 "name": "Users",
 "item": [
 {
