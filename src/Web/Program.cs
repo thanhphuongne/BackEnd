@@ -27,6 +27,13 @@ if (app.Environment.IsDevelopment())
         try
         {
             await app.InitialiseDatabaseAsync();
+
+            // Seed data
+            using var scope = app.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<BackEnd.Infrastructure.Data.ApplicationDbContext>();
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<BackEnd.Infrastructure.Data.DataSeeder>>();
+            var seeder = new BackEnd.Infrastructure.Data.DataSeeder(context, logger);
+            await seeder.SeedAsync();
         }
         catch (Exception ex)
         {

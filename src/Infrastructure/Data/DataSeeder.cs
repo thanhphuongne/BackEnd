@@ -1,0 +1,372 @@
+using BackEnd.Domain.Entities;
+using BackEnd.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace BackEnd.Infrastructure.Data;
+
+public class DataSeeder
+{
+    private readonly ApplicationDbContext _context;
+    private readonly ILogger<DataSeeder> _logger;
+
+    public DataSeeder(ApplicationDbContext context, ILogger<DataSeeder> logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+
+    public async Task SeedAsync()
+    {
+        _logger.LogInformation("🌱 Starting data seeding...");
+
+        await SeedSportsAsync();
+        await SeedBusinessOwnerAsync();
+        await SeedBusinessesAsync();
+        await SeedVenuesAsync();
+        await SeedFieldsAsync();
+
+        _logger.LogInformation("✅ Data seeding completed!");
+    }
+
+    private async Task SeedSportsAsync()
+    {
+        if (await _context.Sports.AnyAsync())
+        {
+            _logger.LogInformation("🏃 Sports already exist, skipping...");
+            return;
+        }
+
+        var sports = new List<Sport>
+        {
+            new() { SportName = "Soccer", Description = "Association football (soccer)" },
+            new() { SportName = "Basketball", Description = "Indoor and outdoor basketball courts" },
+            new() { SportName = "Tennis", Description = "Tennis courts for singles and doubles" },
+            new() { SportName = "Badminton", Description = "Indoor badminton courts" }
+        };
+
+        _context.Sports.AddRange(sports);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("✅ Seeded {Count} sports", sports.Count);
+    }
+
+    private async Task SeedBusinessOwnerAsync()
+    {
+        if (await _context.Users.AnyAsync(u => u.AccountType == AccountType.FieldOwner))
+        {
+            _logger.LogInformation("👤 Business owner already exists, skipping...");
+            return;
+        }
+
+        var businessOwner = new User
+        {
+            Email = "owner@sportsbooking.com",
+            FullName = "Sports Facility Owner",
+            DisplayName = "Owner",
+            Phone = "+1234567890",
+            AccountType = AccountType.FieldOwner,
+            PasswordHash = "dummy-hash" // This would be set by Identity in real registration
+        };
+
+        _context.Users.Add(businessOwner);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("✅ Seeded business owner user");
+    }
+
+    private async Task SeedBusinessesAsync()
+    {
+        if (await _context.Businesses.AnyAsync())
+        {
+            _logger.LogInformation("🏢 Businesses already exist, skipping...");
+            return;
+        }
+
+        var businesses = new List<Business>
+        {
+            new()
+            {
+                OwnerId = 1, // We'll need to create a business owner user first
+                BusinessName = "City Sports Complex",
+                ContactEmail = "info@citysports.com",
+                ContactPhone = "+1234567890",
+                Address = "123 Sports Avenue, City Center"
+            },
+            new()
+            {
+                OwnerId = 1,
+                BusinessName = "Elite Tennis Club",
+                ContactEmail = "contact@elitetennis.com",
+                ContactPhone = "+1234567891",
+                Address = "456 Tennis Road, Uptown"
+            },
+            new()
+            {
+                OwnerId = 1,
+                BusinessName = "Community Recreation Center",
+                ContactEmail = "info@communityrec.com",
+                ContactPhone = "+1234567892",
+                Address = "789 Community Drive, Downtown"
+            }
+        };
+
+        _context.Businesses.AddRange(businesses);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("✅ Seeded {Count} businesses", businesses.Count);
+    }
+
+    private async Task SeedVenuesAsync()
+    {
+        if (await _context.Venues.AnyAsync())
+        {
+            _logger.LogInformation("🏟️ Venues already exist, skipping...");
+            return;
+        }
+
+        var businesses = await _context.Businesses.ToListAsync();
+        if (!businesses.Any())
+        {
+            _logger.LogWarning("❌ No businesses found for venue seeding");
+            return;
+        }
+
+        var venues = new List<Venue>
+        {
+            // City Sports Complex venues
+            new()
+            {
+                BusinessId = businesses[0].Id,
+                VenueName = "Quy Nhon Stadium",
+                Address = "123 Sports Avenue, Quy Nhon City Center",
+                Description = "Premier stadium with multiple soccer fields and facilities",
+                ContactPhone = "+84234567890",
+                ContactEmail = "stadium@quynhon.com",
+                OperatingHours = "06:00-22:00",
+                Facilities = "Parking, Restrooms, Cafeteria, Locker Rooms, Medical Room",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = businesses[0].Id,
+                VenueName = "City Sports Indoor Complex",
+                Address = "125 Sports Avenue, Quy Nhon City Center",
+                Description = "Indoor sports complex with basketball and badminton courts",
+                ContactPhone = "+84234567891",
+                ContactEmail = "indoor@citysports.com",
+                OperatingHours = "06:00-23:00",
+                Facilities = "Air Conditioning, Parking, Restrooms, Equipment Rental",
+                IsActive = true
+            },
+
+            // Elite Tennis Club venues
+            new()
+            {
+                BusinessId = businesses[1].Id,
+                VenueName = "Elite Tennis Center",
+                Address = "456 Tennis Road, Quy Nhon Uptown",
+                Description = "Professional tennis facility with multiple court types",
+                ContactPhone = "+84234567892",
+                ContactEmail = "center@elitetennis.com",
+                OperatingHours = "06:00-21:00",
+                Facilities = "Pro Shop, Coaching, Parking, Clubhouse, Showers",
+                IsActive = true
+            },
+
+            // Community Recreation Center venues
+            new()
+            {
+                BusinessId = businesses[2].Id,
+                VenueName = "Community Sports Hub",
+                Address = "789 Community Drive, Quy Nhon Downtown",
+                Description = "Affordable community sports facility",
+                ContactPhone = "+84234567893",
+                ContactEmail = "hub@communityrec.com",
+                OperatingHours = "08:00-20:00",
+                Facilities = "Basic Facilities, Parking, Restrooms",
+                IsActive = true
+            }
+        };
+
+        _context.Venues.AddRange(venues);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("✅ Seeded {Count} venues", venues.Count);
+    }
+
+    private async Task SeedFieldsAsync()
+    {
+        if (await _context.Fields.AnyAsync())
+        {
+            _logger.LogInformation("🏟️ Fields already exist, skipping...");
+            return;
+        }
+
+        var venues = await _context.Venues.Include(v => v.Business).ToListAsync();
+        if (!venues.Any())
+        {
+            _logger.LogWarning("❌ No venues found for field seeding");
+            return;
+        }
+
+        var fields = new List<Field>
+        {
+            // Quy Nhon Stadium fields (venues[0])
+            new()
+            {
+                BusinessId = venues[0].BusinessId,
+                VenueId = venues[0].Id,
+                FieldName = "Main Soccer Field",
+                FieldNumber = "Field 1",
+                SportType = SportType.Soccer,
+                Address = null, // Inherits from venue
+                Description = "Full-size soccer field with natural grass and professional lighting",
+                BasePrice = 80.00m,
+                OperatingHours = "06:00-22:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[0].BusinessId,
+                VenueId = venues[0].Id,
+                FieldName = "Training Soccer Field",
+                FieldNumber = "Field 2",
+                SportType = SportType.Soccer,
+                Address = null,
+                Description = "Training field with artificial turf",
+                BasePrice = 60.00m,
+                OperatingHours = "06:00-22:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[0].BusinessId,
+                VenueId = venues[0].Id,
+                FieldName = "Youth Soccer Field",
+                FieldNumber = "Field 3",
+                SportType = SportType.Soccer,
+                Address = null,
+                Description = "Smaller field perfect for youth training",
+                BasePrice = 40.00m,
+                OperatingHours = "06:00-22:00",
+                IsActive = true
+            },
+
+            // City Sports Indoor Complex fields (venues[1])
+            new()
+            {
+                BusinessId = venues[1].BusinessId,
+                VenueId = venues[1].Id,
+                FieldName = "Basketball Court",
+                FieldNumber = "Court A",
+                SportType = SportType.Basketball,
+                Address = null,
+                Description = "Professional indoor basketball court with wooden flooring",
+                BasePrice = 50.00m,
+                OperatingHours = "06:00-23:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[1].BusinessId,
+                VenueId = venues[1].Id,
+                FieldName = "Basketball Court",
+                FieldNumber = "Court B",
+                SportType = SportType.Basketball,
+                Address = null,
+                Description = "Secondary basketball court for training",
+                BasePrice = 40.00m,
+                OperatingHours = "06:00-23:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[1].BusinessId,
+                VenueId = venues[1].Id,
+                FieldName = "Badminton Court",
+                FieldNumber = "Court 1",
+                SportType = SportType.Badminton,
+                Address = null,
+                Description = "Professional badminton court with wooden flooring",
+                BasePrice = 30.00m,
+                OperatingHours = "07:00-22:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[1].BusinessId,
+                VenueId = venues[1].Id,
+                FieldName = "Badminton Court",
+                FieldNumber = "Court 2",
+                SportType = SportType.Badminton,
+                Address = null,
+                Description = "Secondary badminton court",
+                BasePrice = 30.00m,
+                OperatingHours = "07:00-22:00",
+                IsActive = true
+            },
+
+            // Elite Tennis Center fields (venues[2])
+            new()
+            {
+                BusinessId = venues[2].BusinessId,
+                VenueId = venues[2].Id,
+                FieldName = "Tennis Court",
+                FieldNumber = "Court 1",
+                SportType = SportType.Tennis,
+                Address = null,
+                Description = "Professional clay tennis court",
+                BasePrice = 60.00m,
+                OperatingHours = "06:00-21:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[2].BusinessId,
+                VenueId = venues[2].Id,
+                FieldName = "Tennis Court",
+                FieldNumber = "Court 2",
+                SportType = SportType.Tennis,
+                Address = null,
+                Description = "Hard court tennis court with lights",
+                BasePrice = 50.00m,
+                OperatingHours = "06:00-22:00",
+                IsActive = true
+            },
+
+            // Community Sports Hub fields (venues[3])
+            new()
+            {
+                BusinessId = venues[3].BusinessId,
+                VenueId = venues[3].Id,
+                FieldName = "Multi-Purpose Court",
+                FieldNumber = "Court 1",
+                SportType = SportType.Basketball,
+                Address = null,
+                Description = "Multi-purpose court for basketball and community events",
+                BasePrice = 25.00m,
+                OperatingHours = "08:00-20:00",
+                IsActive = true
+            },
+            new()
+            {
+                BusinessId = venues[3].BusinessId,
+                VenueId = venues[3].Id,
+                FieldName = "Badminton Court",
+                FieldNumber = "Court 1",
+                SportType = SportType.Badminton,
+                Address = null,
+                Description = "Community badminton court",
+                BasePrice = 20.00m,
+                OperatingHours = "08:00-21:00",
+                IsActive = true
+            }
+        };
+
+        _context.Fields.AddRange(fields);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("✅ Seeded {Count} fields", fields.Count);
+    }
+}

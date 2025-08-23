@@ -5,7 +5,9 @@ namespace BackEnd.Application.Common.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<User> Users { get; }
+    DbSet<Sport> Sports { get; }
     DbSet<Business> Businesses { get; }
+    DbSet<Venue> Venues { get; }
     DbSet<Field> Fields { get; }
     DbSet<FieldAvailability> FieldAvailabilities { get; }
     DbSet<PricingRule> PricingRules { get; }

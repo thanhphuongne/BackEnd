@@ -13,7 +13,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public new DbSet<User> Users => Set<User>();
+    public DbSet<Sport> Sports => Set<Sport>();
     public DbSet<Business> Businesses => Set<Business>();
+    public DbSet<Venue> Venues => Set<Venue>();
     public DbSet<Field> Fields => Set<Field>();
     public DbSet<FieldAvailability> FieldAvailabilities => Set<FieldAvailability>();
     public DbSet<PricingRule> PricingRules => Set<PricingRule>();

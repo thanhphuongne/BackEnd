@@ -15,13 +15,16 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(f => f.FieldNumber)
+            .HasMaxLength(50)
+            .IsRequired();
+
         builder.Property(f => f.SportType)
             .HasConversion<string>()
             .IsRequired();
 
         builder.Property(f => f.Address)
-            .HasColumnType("text")
-            .IsRequired();
+            .HasColumnType("text");
 
         builder.Property(f => f.Description)
             .HasColumnType("text");
@@ -41,11 +44,17 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
 
         // Indexes
         builder.HasIndex(f => f.BusinessId);
+        builder.HasIndex(f => f.VenueId);
 
-        // Foreign key relationship
+        // Foreign key relationships
         builder.HasOne(f => f.Business)
             .WithMany(b => b.Fields)
             .HasForeignKey(f => f.BusinessId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(f => f.Venue)
+            .WithMany(v => v.Fields)
+            .HasForeignKey(f => f.VenueId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
