@@ -69,7 +69,7 @@ public class AuthService : IAuthService
         return await GenerateAuthResponseAsync(user, appUser);
     }
 
-    public async Task<AuthResponse?> RegisterAsync(RegisterRequest request)
+    public async Task<RegisterResult> RegisterAsync(RegisterRequest request)
     {
         _logger.LogInformation("📝 AuthService: Registration attempt for email: {Email}, Name: {FullName}",
             request.Email, request.FullName);
@@ -79,7 +79,7 @@ public class AuthService : IAuthService
         if (existingUser != null)
         {
             _logger.LogWarning("❌ AuthService: User already exists: {Email}", request.Email);
-            return null;
+            return RegisterResult.Failure("User with this email already exists");
         }
 
         _logger.LogInformation("👤 AuthService: Creating Identity user for: {Email}", request.Email);
@@ -94,9 +94,10 @@ public class AuthService : IAuthService
         var result = await _userManager.CreateAsync(identityUser, request.Password);
         if (!result.Succeeded)
         {
+            var errors = result.Errors.Select(e => e.Description).ToList();
             _logger.LogError("❌ AuthService: Failed to create Identity user for: {Email}. Errors: {Errors}",
-                request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
-            return null;
+                request.Email, string.Join(", ", errors));
+            return RegisterResult.Failure(errors);
         }
 
         _logger.LogInformation("💾 AuthService: Creating business user record for: {Email}", request.Email);
@@ -117,7 +118,8 @@ public class AuthService : IAuthService
         await _context.SaveChangesAsync(CancellationToken.None);
 
         _logger.LogInformation("✅ AuthService: User registration completed successfully for: {Email}", request.Email);
-        return await GenerateAuthResponseAsync(identityUser, appUser);
+        var authResponse = await GenerateAuthResponseAsync(identityUser, appUser);
+        return RegisterResult.Success(authResponse);
     }
 
     public async Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request)

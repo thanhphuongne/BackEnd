@@ -61,15 +61,29 @@ public class AuthController : ControllerBase
         }
 
         var result = await _authService.RegisterAsync(request);
-        if (result == null)
+        if (!result.Succeeded)
         {
-            _logger.LogWarning("❌ Registration failed - User already exists: {Email}", request.Email);
-            return BadRequest(new { message = "User with this email already exists" });
+            if (result.ErrorMessage != null)
+            {
+                _logger.LogWarning("❌ Registration failed: {ErrorMessage}", result.ErrorMessage);
+                return BadRequest(new { message = result.ErrorMessage });
+            }
+            else if (result.Errors != null && result.Errors.Any())
+            {
+                _logger.LogWarning("❌ Registration failed - Validation errors: {Errors}",
+                    string.Join(", ", result.Errors));
+                return BadRequest(new { message = "Registration failed", errors = result.Errors });
+            }
+            else
+            {
+                _logger.LogWarning("❌ Registration failed - Unknown error");
+                return BadRequest(new { message = "Registration failed due to an unknown error" });
+            }
         }
 
         _logger.LogInformation("✅ Registration successful for email: {Email}, User: {UserName}",
-            request.Email, result.User.FullName);
-        return Ok(result);
+            request.Email, result.AuthResponse!.User.FullName);
+        return Ok(result.AuthResponse);
     }
 
     /// <summary>
