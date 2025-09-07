@@ -5,5 +5,6 @@ public enum SportType
     Soccer,
     Basketball,
     Badminton,
-    Tennis
+    Tennis,
+    Pickleball
 }

@@ -31,24 +31,36 @@ public class DataSeeder
 
     private async Task SeedSportsAsync()
     {
-        if (await _context.Sports.AnyAsync())
-        {
-            _logger.LogInformation("🏃 Sports already exist, skipping...");
-            return;
-        }
+        var existingSports = await _context.Sports.Select(s => s.SportName).ToListAsync();
+        var sportsToAdd = new List<Sport>();
 
-        var sports = new List<Sport>
+        var allSports = new List<(string Name, string Description)>
         {
-            new() { SportName = "Soccer", Description = "Association football (soccer)" },
-            new() { SportName = "Basketball", Description = "Indoor and outdoor basketball courts" },
-            new() { SportName = "Tennis", Description = "Tennis courts for singles and doubles" },
-            new() { SportName = "Badminton", Description = "Indoor badminton courts" }
+            ("Soccer", "Association football (soccer)"),
+            ("Basketball", "Indoor and outdoor basketball courts"),
+            ("Tennis", "Tennis courts for singles and doubles"),
+            ("Badminton", "Indoor badminton courts"),
+            ("Pickleball", "Indoor and outdoor pickleball courts")
         };
 
-        _context.Sports.AddRange(sports);
-        await _context.SaveChangesAsync();
+        foreach (var (name, desc) in allSports)
+        {
+            if (!existingSports.Contains(name))
+            {
+                sportsToAdd.Add(new Sport { SportName = name, Description = desc });
+            }
+        }
 
-        _logger.LogInformation("✅ Seeded {Count} sports", sports.Count);
+        if (sportsToAdd.Any())
+        {
+            _context.Sports.AddRange(sportsToAdd);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("✅ Seeded {Count} new sports", sportsToAdd.Count);
+        }
+        else
+        {
+            _logger.LogInformation("🏃 All sports already exist, skipping...");
+        }
     }
 
     private async Task SeedBusinessOwnerAsync()
@@ -197,12 +209,6 @@ public class DataSeeder
 
     private async Task SeedFieldsAsync()
     {
-        if (await _context.Fields.AnyAsync())
-        {
-            _logger.LogInformation("🏟️ Fields already exist, skipping...");
-            return;
-        }
-
         var venues = await _context.Venues.Include(v => v.Business).ToListAsync();
         if (!venues.Any())
         {
@@ -210,17 +216,30 @@ public class DataSeeder
             return;
         }
 
-        var fields = new List<Field>
+        var existingFieldNames = await _context.Fields.Select(f => f.FieldName).ToListAsync();
+        var fieldsToAdd = new List<Field>();
+
+        // Define all fields to potentially add
+        var allFields = new List<Field>();
+
+        // Use the first venue for all fields to avoid index out of range
+        var defaultVenue = venues.FirstOrDefault();
+        if (defaultVenue == null)
         {
-            // Quy Nhon Stadium fields (venues[0])
+            _logger.LogWarning("❌ No venues available for field seeding");
+            return;
+        }
+
+        // Existing fields (add if not exist)
+        allFields.AddRange(new List<Field>
+        {
             new()
             {
-                BusinessId = venues[0].BusinessId,
-                VenueId = venues[0].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Main Soccer Field",
                 FieldNumber = "Field 1",
                 SportType = SportType.Soccer,
-                Address = null, // Inherits from venue
                 Description = "Full-size soccer field with natural grass and professional lighting",
                 BasePrice = 80.00m,
                 OperatingHours = "06:00-22:00",
@@ -228,12 +247,11 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[0].BusinessId,
-                VenueId = venues[0].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Training Soccer Field",
                 FieldNumber = "Field 2",
                 SportType = SportType.Soccer,
-                Address = null,
                 Description = "Training field with artificial turf",
                 BasePrice = 60.00m,
                 OperatingHours = "06:00-22:00",
@@ -241,27 +259,23 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[0].BusinessId,
-                VenueId = venues[0].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Youth Soccer Field",
                 FieldNumber = "Field 3",
                 SportType = SportType.Soccer,
-                Address = null,
                 Description = "Smaller field perfect for youth training",
                 BasePrice = 40.00m,
                 OperatingHours = "06:00-22:00",
                 IsActive = true
             },
-
-            // City Sports Indoor Complex fields (venues[1])
             new()
             {
-                BusinessId = venues[1].BusinessId,
-                VenueId = venues[1].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Basketball Court",
                 FieldNumber = "Court A",
                 SportType = SportType.Basketball,
-                Address = null,
                 Description = "Professional indoor basketball court with wooden flooring",
                 BasePrice = 50.00m,
                 OperatingHours = "06:00-23:00",
@@ -269,12 +283,11 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[1].BusinessId,
-                VenueId = venues[1].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Basketball Court",
                 FieldNumber = "Court B",
                 SportType = SportType.Basketball,
-                Address = null,
                 Description = "Secondary basketball court for training",
                 BasePrice = 40.00m,
                 OperatingHours = "06:00-23:00",
@@ -282,12 +295,11 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[1].BusinessId,
-                VenueId = venues[1].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Badminton Court",
                 FieldNumber = "Court 1",
                 SportType = SportType.Badminton,
-                Address = null,
                 Description = "Professional badminton court with wooden flooring",
                 BasePrice = 30.00m,
                 OperatingHours = "07:00-22:00",
@@ -295,27 +307,23 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[1].BusinessId,
-                VenueId = venues[1].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Badminton Court",
                 FieldNumber = "Court 2",
                 SportType = SportType.Badminton,
-                Address = null,
                 Description = "Secondary badminton court",
                 BasePrice = 30.00m,
                 OperatingHours = "07:00-22:00",
                 IsActive = true
             },
-
-            // Elite Tennis Center fields (venues[2])
             new()
             {
-                BusinessId = venues[2].BusinessId,
-                VenueId = venues[2].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Tennis Court",
                 FieldNumber = "Court 1",
                 SportType = SportType.Tennis,
-                Address = null,
                 Description = "Professional clay tennis court",
                 BasePrice = 60.00m,
                 OperatingHours = "06:00-21:00",
@@ -323,27 +331,23 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[2].BusinessId,
-                VenueId = venues[2].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Tennis Court",
                 FieldNumber = "Court 2",
                 SportType = SportType.Tennis,
-                Address = null,
                 Description = "Hard court tennis court with lights",
                 BasePrice = 50.00m,
                 OperatingHours = "06:00-22:00",
                 IsActive = true
             },
-
-            // Community Sports Hub fields (venues[3])
             new()
             {
-                BusinessId = venues[3].BusinessId,
-                VenueId = venues[3].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Multi-Purpose Court",
                 FieldNumber = "Court 1",
                 SportType = SportType.Basketball,
-                Address = null,
                 Description = "Multi-purpose court for basketball and community events",
                 BasePrice = 25.00m,
                 OperatingHours = "08:00-20:00",
@@ -351,22 +355,103 @@ public class DataSeeder
             },
             new()
             {
-                BusinessId = venues[3].BusinessId,
-                VenueId = venues[3].Id,
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
                 FieldName = "Badminton Court",
                 FieldNumber = "Court 1",
                 SportType = SportType.Badminton,
-                Address = null,
                 Description = "Community badminton court",
                 BasePrice = 20.00m,
                 OperatingHours = "08:00-21:00",
                 IsActive = true
             }
-        };
+        });
 
-        _context.Fields.AddRange(fields);
-        await _context.SaveChangesAsync();
+        // Add 5 Badminton fields, each with 3 small fields
+        for (int i = 1; i <= 5; i++)
+        {
+            allFields.Add(new Field
+            {
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
+                FieldName = $"Badminton Field {i}",
+                FieldNumber = $"Field {i}",
+                SportType = SportType.Badminton,
+                Description = $"Main badminton field {i}",
+                BasePrice = 30.00m,
+                OperatingHours = "07:00-22:00",
+                IsActive = true
+            });
 
-        _logger.LogInformation("✅ Seeded {Count} fields", fields.Count);
+            // Add 3 small fields for each main field
+            foreach (char sub in new[] { 'A', 'B', 'C' })
+            {
+                allFields.Add(new Field
+                {
+                    BusinessId = defaultVenue.BusinessId,
+                    VenueId = defaultVenue.Id,
+                    FieldName = $"Badminton Field {i} - Small Field {sub}",
+                    FieldNumber = $"Field {i}{sub}",
+                    SportType = SportType.Badminton,
+                    Description = $"Small badminton field {sub} in Field {i}",
+                    BasePrice = 10.00m,
+                    OperatingHours = "07:00-22:00",
+                    IsActive = true
+                });
+            }
+        }
+
+        // Add 5 Pickleball fields, each with 3 small fields
+        for (int i = 1; i <= 5; i++)
+        {
+            allFields.Add(new Field
+            {
+                BusinessId = defaultVenue.BusinessId,
+                VenueId = defaultVenue.Id,
+                FieldName = $"Pickleball Field {i}",
+                FieldNumber = $"Field {i}",
+                SportType = SportType.Pickleball,
+                Description = $"Main pickleball field {i}",
+                BasePrice = 35.00m,
+                OperatingHours = "07:00-22:00",
+                IsActive = true
+            });
+
+            // Add 3 small fields for each main field
+            foreach (char sub in new[] { 'A', 'B', 'C' })
+            {
+                allFields.Add(new Field
+                {
+                    BusinessId = defaultVenue.BusinessId,
+                    VenueId = defaultVenue.Id,
+                    FieldName = $"Pickleball Field {i} - Small Field {sub}",
+                    FieldNumber = $"Field {i}{sub}",
+                    SportType = SportType.Pickleball,
+                    Description = $"Small pickleball field {sub} in Field {i}",
+                    BasePrice = 12.00m,
+                    OperatingHours = "07:00-22:00",
+                    IsActive = true
+                });
+            }
+        }
+
+        foreach (var field in allFields)
+        {
+            if (!existingFieldNames.Contains(field.FieldName))
+            {
+                fieldsToAdd.Add(field);
+            }
+        }
+
+        if (fieldsToAdd.Any())
+        {
+            _context.Fields.AddRange(fieldsToAdd);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("✅ Seeded {Count} new fields", fieldsToAdd.Count);
+        }
+        else
+        {
+            _logger.LogInformation("🏟️ All fields already exist, skipping...");
+        }
     }
 }
