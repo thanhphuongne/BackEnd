@@ -1,5 +1,6 @@
 using BackEnd.Application.Common.Interfaces;
 using BackEnd.Application.DTOs.Booking;
+using BackEnd.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,11 +12,13 @@ namespace BackEnd.Web.Controller;
 public class BookingController : ControllerBase
 {
     private readonly IBookingService _bookingService;
+    private readonly IAnalyticsService _analyticsService;
     private readonly ILogger<BookingController> _logger;
 
-    public BookingController(IBookingService bookingService, ILogger<BookingController> logger)
+    public BookingController(IBookingService bookingService, IAnalyticsService analyticsService, ILogger<BookingController> logger)
     {
         _bookingService = bookingService;
+        _analyticsService = analyticsService;
         _logger = logger;
     }
 
@@ -321,5 +324,17 @@ public class BookingController : ControllerBase
         
         _logger.LogInformation("✅ Booking {BookingId} cancelled successfully by user: {Email}", id, userEmail);
         return Ok(new { message = "Booking cancelled successfully" });
+    }
+
+    /// <summary>
+    /// Get analytics data
+    /// </summary>
+    [HttpGet("analytics")]
+    [Authorize]
+    public async Task<IActionResult> GetAnalytics()
+    {
+        _logger.LogInformation("📊 Getting analytics data");
+        var analytics = await _analyticsService.GetAnalyticsAsync();
+        return Ok(analytics);
     }
 }
