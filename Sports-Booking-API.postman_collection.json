@@ -106,28 +106,94 @@
 }
 },
 {
-"name": "Check Auth",
-"request": {
-"auth": {
-"type": "bearer",
-"bearer": [
-{
-"key": "token",
-"value": "{{token}}",
-"type": "string"
-}
-]
+ "name": "Check Auth",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/auth/check",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "auth", "check"]
+ }
+ }
 },
-"method": "GET",
-"header": [],
-"url": {
-"raw": "https://localhost:5001/api/auth/check",
-"protocol": "https",
-"host": ["localhost"],
-"port": "5001",
-"path": ["api", "auth", "check"]
-}
-}
+{
+ "name": "Update Profile",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"name\": \"Updated Name\",\n  \"phone\": \"0123456789\",\n  \"bio\": \"Updated bio\",\n  \"country\": \"Vietnam\",\n  \"cityState\": \"Quy Nhon\",\n  \"postalCode\": \"12345\",\n  \"facebook\": \"facebook.com/user\",\n  \"twitter\": \"twitter.com/user\",\n  \"linkedin\": \"linkedin.com/in/user\",\n  \"instagram\": \"instagram.com/user\"\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/auth/profile",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "auth", "profile"]
+ }
+ }
+},
+{
+ "name": "Change Password",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/auth/change-password",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "auth", "change-password"]
+ }
+ }
 }
 ]
 },
@@ -278,33 +344,710 @@
 }
 },
 {
-"name": "Get My Bookings",
-"request": {
-"auth": {
-"type": "bearer",
-"bearer": [
+ "name": "Get My Bookings",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/bookings/my",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "bookings", "my"]
+ }
+ }
+},
 {
-"key": "token",
-"value": "{{token}}",
-"type": "string"
+ "name": "Cancel Booking",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/bookings/1/cancel",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "bookings", "1", "cancel"]
+ }
+ }
+},
+{
+ "name": "Get Popular Fields",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/fields/popular",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "fields", "popular"]
+ }
+ }
+},
+{
+ "name": "Get Fields by Sport",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/fields?sport=football",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "fields"],
+ "query": [
+ {
+ "key": "sport",
+ "value": "football"
+ }
+ ]
+ }
+}
+},
+{
+ "name": "Get Field Details",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/fields/1",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "fields", "1"]
+ }
+ }
+},
+{
+ "name": "Get Field SubCourts",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/fields/1/subcourts",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "fields", "1", "subcourts"]
+ }
+ }
+},
+{
+ "name": "Get SubCourt Time Slots",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/booking/fields/1/subcourts/1/timeslots?date=2025-08-20",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "booking", "fields", "1", "subcourts", "1", "timeslots"],
+ "query": [
+ {
+ "key": "date",
+ "value": "2025-08-20"
+ }
+ ]
+ }
+}
 }
 ]
 },
-"method": "GET",
-"header": [],
-"url": {
-"raw": "https://localhost:5001/api/booking/bookings/my",
-"protocol": "https",
-"host": ["localhost"],
-"port": "5001",
-"path": ["api", "booking", "bookings", "my"]
-}
-}
+{
+"name": "Matches",
+ "item": [
+ {
+ "name": "Get All Matches",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/matches",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches"]
+ }
+ }
+},
+{
+ "name": "Get My Matches",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/matches/my",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "my"]
+ }
+ }
+},
+{
+ "name": "Create Match",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "POST",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"title\": \"Friendly Football Match\",\n  \"sport\": \"football\",\n  \"date\": \"2025-08-25\",\n  \"time\": \"14:00\",\n  \"location\": \"Sân bóng ABC\",\n  \"address\": \"123 Đường ABC, Quy Nhơn\",\n  \"maxParticipants\": 22,\n  \"skillLevel\": \"Trung bình\",\n  \"description\": \"Trận giao hữu vui vẻ\",\n  \"phone\": \"0123456789\",\n  \"facebook\": \"fb.com/match\"\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/matches",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches"]
+ }
+ }
+},
+{
+ "name": "Join Match",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "POST",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1/join",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1", "join"]
+ }
+ }
+},
+{
+ "name": "Approve Join Request",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1/approve/user123",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1", "approve", "user123"]
+ }
+ }
+},
+{
+ "name": "Reject Join Request",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1/reject/user123",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1", "reject", "user123"]
+ }
+ }
+},
+{
+ "name": "Cancel Match",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1/cancel",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1", "cancel"]
+ }
+ }
+},
+{
+ "name": "Delete Match",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "DELETE",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1"]
+ }
+ }
+},
+{
+ "name": "Leave Match",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/matches/1/leave",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "matches", "1", "leave"]
+ }
+ }
 }
 ]
 },
 {
-"name": "Users",
+ "name": "Teams",
+ "item": [
+ {
+ "name": "Get All Teams",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/teams",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "teams"]
+ }
+ }
+},
+{
+ "name": "Get My Teams",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/teams/my",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "teams", "my"]
+ }
+ }
+},
+{
+ "name": "Create Team",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "POST",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"name\": \"Dream Team FC\",\n  \"sport\": \"football\",\n  \"description\": \"Đội bóng chuyên nghiệp\",\n  \"maxMembers\": 22,\n  \"skillLevel\": \"Cao\",\n  \"location\": \"Quy Nhơn\",\n  \"contactInfo\": {\n    \"phone\": \"0123456789\",\n    \"email\": \"team@example.com\"\n  }\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/teams",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "teams"]
+ }
+ }
+},
+{
+ "name": "Join Team",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "POST",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/teams/1/join",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "teams", "1", "join"]
+ }
+ }
+},
+{
+ "name": "Leave Team",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/teams/1/leave",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "teams", "1", "leave"]
+ }
+ }
+}
+]
+},
+{
+ "name": "Reviews",
+ "item": [
+ {
+ "name": "Get Reviews by Field",
+ "request": {
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/reviews/field/1",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "reviews", "field", "1"]
+ }
+ }
+},
+{
+ "name": "Create Review",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "POST",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"fieldId\": 1,\n  \"rating\": 5,\n  \"comment\": \"Sân tuyệt vời, sạch sẽ và tiện nghi\"\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/reviews",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "reviews"]
+ }
+ }
+},
+{
+ "name": "Update Review",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [
+ {
+ "key": "Content-Type",
+ "value": "application/json"
+ }
+ ],
+ "body": {
+ "mode": "raw",
+ "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Sân tốt, nhưng có thể cải thiện vệ sinh hơn\"\n}"
+ },
+ "url": {
+ "raw": "https://localhost:5001/api/reviews/1",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "reviews", "1"]
+ }
+ }
+}
+]
+},
+{
+ "name": "Dashboard",
+ "item": [
+ {
+ "name": "Get User Dashboard",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/dashboard",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "dashboard"]
+ }
+ }
+},
+{
+ "name": "Get User Stats",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/dashboard/stats",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "dashboard", "stats"]
+ }
+ }
+}
+]
+},
+{
+ "name": "Notifications",
+ "item": [
+ {
+ "name": "Get My Notifications",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "GET",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/notifications",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "notifications"]
+ }
+ }
+},
+{
+ "name": "Mark Notification Read",
+ "request": {
+ "auth": {
+ "type": "bearer",
+ "bearer": [
+ {
+ "key": "token",
+ "value": "{{token}}",
+ "type": "string"
+ }
+ ]
+ },
+ "method": "PUT",
+ "header": [],
+ "url": {
+ "raw": "https://localhost:5001/api/notifications/1/read",
+ "protocol": "https",
+ "host": ["localhost"],
+ "port": "5001",
+ "path": ["api", "notifications", "1", "read"]
+ }
+ }
+}
+]
+},
+{
+ "name": "Users",
 "item": [
 {
 "name": "Get All Users",
