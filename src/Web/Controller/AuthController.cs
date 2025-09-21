@@ -132,9 +132,30 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Update user profile
+    /// </summary>
+    [HttpPut("profile")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _authService.UpdateProfileAsync(userId, request);
+        if (!result)
+            return BadRequest(new { message = "Failed to update profile." });
+
+        return Ok(new { message = "Profile updated successfully" });
+    }
+
+    /// <summary>
     /// Change user password
     /// </summary>
-    [HttpPost("change-password")]
+    [HttpPut("change-password")]
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {

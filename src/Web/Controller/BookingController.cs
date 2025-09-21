@@ -98,12 +98,12 @@ public class BookingController : ControllerBase
     /// Get all fields or fields by sport
     /// </summary>
     [HttpGet("fields")]
-    public async Task<IActionResult> GetFields([FromQuery] int? sportId)
+    public async Task<IActionResult> GetFields([FromQuery] string? sport)
     {
-        if (sportId.HasValue)
+        if (!string.IsNullOrEmpty(sport))
         {
-            _logger.LogInformation("🏟️ Getting fields for sport: {SportId}", sportId.Value);
-            var fields = await _bookingService.GetFieldsBySportAsync(sportId.Value);
+            _logger.LogInformation("🏟️ Getting fields for sport: {Sport}", sport);
+            var fields = await _bookingService.GetFieldsBySportNameAsync(sport);
             return Ok(fields);
         }
         else
@@ -122,11 +122,33 @@ public class BookingController : ControllerBase
     {
         _logger.LogInformation("🔍 Getting field by ID: {FieldId}", id);
         var field = await _bookingService.GetFieldByIdAsync(id);
-        
+
         if (field == null)
             return NotFound(new { message = "Field not found" });
-            
+
         return Ok(field);
+    }
+
+    /// <summary>
+    /// Get field subcourts
+    /// </summary>
+    [HttpGet("fields/{fieldId}/subcourts")]
+    public IActionResult GetFieldSubCourts(int fieldId)
+    {
+        _logger.LogInformation("🏟️ Getting subcourts for field: {FieldId}", fieldId);
+        // TODO: Implement subcourts functionality
+        return Ok(new List<object>()); // Return empty list for now
+    }
+
+    /// <summary>
+    /// Get subcourt time slots
+    /// </summary>
+    [HttpGet("fields/{fieldId}/subcourts/{subcourtId}/timeslots")]
+    public IActionResult GetSubCourtTimeSlots(int fieldId, int subcourtId, [FromQuery] DateTime date)
+    {
+        _logger.LogInformation("📅 Getting time slots for subcourt {SubcourtId} in field {FieldId} on {Date}", subcourtId, fieldId, date.ToString("yyyy-MM-dd"));
+        // TODO: Implement subcourt time slots functionality
+        return Ok(new List<object>()); // Return empty list for now
     }
 
     /// <summary>
@@ -300,7 +322,7 @@ public class BookingController : ControllerBase
     /// <summary>
     /// Cancel a booking (requires authentication)
     /// </summary>
-    [HttpPost("bookings/{id}/cancel")]
+    [HttpPut("bookings/{id}/cancel")]
     [Authorize]
     public async Task<IActionResult> CancelBooking(int id)
     {
@@ -324,6 +346,17 @@ public class BookingController : ControllerBase
         
         _logger.LogInformation("✅ Booking {BookingId} cancelled successfully by user: {Email}", id, userEmail);
         return Ok(new { message = "Booking cancelled successfully" });
+    }
+
+    /// <summary>
+    /// Get popular fields
+    /// </summary>
+    [HttpGet("fields/popular")]
+    public async Task<IActionResult> GetPopularFields()
+    {
+        _logger.LogInformation("🏟️ Getting popular fields");
+        var fields = await _bookingService.GetPopularFieldsAsync();
+        return Ok(fields);
     }
 
     /// <summary>

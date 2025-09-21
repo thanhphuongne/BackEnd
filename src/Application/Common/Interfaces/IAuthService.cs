@@ -8,5 +8,6 @@ public interface IAuthService
     Task<RegisterResult> RegisterAsync(RegisterRequest request);
     Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
     Task<UserProfileDto?> GetUserProfileAsync(string userId);
+    Task<bool> UpdateProfileAsync(string userId, UpdateProfileRequest request);
     Task<bool> ChangePasswordAsync(string userId, ChangePasswordRequest request);
 }

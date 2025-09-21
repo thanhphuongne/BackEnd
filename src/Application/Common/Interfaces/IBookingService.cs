@@ -16,6 +16,8 @@ public interface IBookingService
     // Fields
     Task<List<FieldDto>> GetFieldsByVenueAsync(int venueId);
     Task<List<FieldDto>> GetFieldsBySportAsync(int sportId);
+    Task<List<FieldDto>> GetFieldsBySportNameAsync(string sportName);
+    Task<List<FieldDto>> GetPopularFieldsAsync();
     Task<List<FieldDto>> GetAllFieldsAsync();
     Task<FieldDto?> GetFieldByIdAsync(int id);
     

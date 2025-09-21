@@ -23,7 +23,23 @@ public class User : BaseAuditableEntity
     public string? VerificationCode { get; set; }
     
     public DateTime? LastLogin { get; set; }
-    
+
+    public string? Bio { get; set; }
+
+    public string? Country { get; set; }
+
+    public string? CityState { get; set; }
+
+    public string? PostalCode { get; set; }
+
+    public string? Facebook { get; set; }
+
+    public string? Twitter { get; set; }
+
+    public string? Linkedin { get; set; }
+
+    public string? Instagram { get; set; }
+
     // Navigation properties
     public Business? Business { get; set; }
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

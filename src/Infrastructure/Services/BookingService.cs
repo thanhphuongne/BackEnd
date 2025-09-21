@@ -194,7 +194,7 @@ public class BookingService : IBookingService
     public async Task<List<FieldDto>> GetFieldsBySportAsync(int sportId)
     {
         _logger.LogInformation("🏟️ Getting fields for sport ID: {SportId}", sportId);
-        
+
         var fields = await _context.Fields
             .Include(f => f.Business)
             .Include(f => f.Venue)
@@ -220,6 +220,78 @@ public class BookingService : IBookingService
             .ToListAsync();
 
         _logger.LogInformation("✅ Found {Count} fields for sport ID: {SportId}", fields.Count, sportId);
+        return fields;
+    }
+
+    public async Task<List<FieldDto>> GetFieldsBySportNameAsync(string sportName)
+    {
+        _logger.LogInformation("🏟️ Getting fields for sport name: {SportName}", sportName);
+
+        if (!Enum.TryParse<SportType>(sportName, true, out var sportType))
+        {
+            _logger.LogWarning("❌ Invalid sport name: {SportName}", sportName);
+            return new List<FieldDto>();
+        }
+
+        var fields = await _context.Fields
+            .Include(f => f.Business)
+            .Include(f => f.Venue)
+            .Where(f => f.SportType == sportType && f.IsActive)
+            .Select(f => new FieldDto
+            {
+                Id = f.Id,
+                BusinessId = f.BusinessId,
+                VenueId = f.VenueId,
+                FieldName = f.FieldName,
+                FieldNumber = f.FieldNumber,
+                SportType = f.SportType.ToString(),
+                Address = f.Address,
+                Description = f.Description,
+                Photos = f.Photos,
+                OperatingHours = f.OperatingHours,
+                BasePrice = f.BasePrice,
+                IsActive = f.IsActive,
+                BusinessName = f.Business.BusinessName,
+                VenueName = f.Venue.VenueName,
+                VenueAddress = f.Venue.Address
+            })
+            .ToListAsync();
+
+        _logger.LogInformation("✅ Found {Count} fields for sport name: {SportName}", fields.Count, sportName);
+        return fields;
+    }
+
+    public async Task<List<FieldDto>> GetPopularFieldsAsync()
+    {
+        _logger.LogInformation("🏟️ Getting popular fields");
+
+        var fields = await _context.Fields
+            .Include(f => f.Business)
+            .Include(f => f.Venue)
+            .Where(f => f.IsActive)
+            .OrderByDescending(f => f.Bookings.Count(b => b.Status != BookingStatus.Cancelled))
+            .Take(10)
+            .Select(f => new FieldDto
+            {
+                Id = f.Id,
+                BusinessId = f.BusinessId,
+                VenueId = f.VenueId,
+                FieldName = f.FieldName,
+                FieldNumber = f.FieldNumber,
+                SportType = f.SportType.ToString(),
+                Address = f.Address,
+                Description = f.Description,
+                Photos = f.Photos,
+                OperatingHours = f.OperatingHours,
+                BasePrice = f.BasePrice,
+                IsActive = f.IsActive,
+                BusinessName = f.Business.BusinessName,
+                VenueName = f.Venue.VenueName,
+                VenueAddress = f.Venue.Address
+            })
+            .ToListAsync();
+
+        _logger.LogInformation("✅ Found {Count} popular fields", fields.Count);
         return fields;
     }
 

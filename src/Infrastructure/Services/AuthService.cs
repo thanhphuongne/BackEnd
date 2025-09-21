@@ -163,8 +163,60 @@ public class AuthService : IAuthService
             ProfilePhotoUrl = appUser.ProfilePhotoUrl,
             AccountType = appUser.AccountType.ToString(),
             LastLogin = appUser.LastLogin,
-            CreatedAt = appUser.Created.DateTime
+            CreatedAt = appUser.Created.DateTime,
+            Bio = appUser.Bio,
+            Country = appUser.Country,
+            CityState = appUser.CityState,
+            PostalCode = appUser.PostalCode,
+            Facebook = appUser.Facebook,
+            Twitter = appUser.Twitter,
+            Linkedin = appUser.Linkedin,
+            Instagram = appUser.Instagram
         };
+    }
+
+    public async Task<bool> UpdateProfileAsync(string userId, UpdateProfileRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            return false;
+
+        var appUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+        if (appUser == null)
+            return false;
+
+        if (!string.IsNullOrEmpty(request.Name))
+            appUser.FullName = request.Name;
+
+        if (request.Phone != null)
+            appUser.Phone = request.Phone;
+
+        if (request.Bio != null)
+            appUser.Bio = request.Bio;
+
+        if (request.Country != null)
+            appUser.Country = request.Country;
+
+        if (request.CityState != null)
+            appUser.CityState = request.CityState;
+
+        if (request.PostalCode != null)
+            appUser.PostalCode = request.PostalCode;
+
+        if (request.Facebook != null)
+            appUser.Facebook = request.Facebook;
+
+        if (request.Twitter != null)
+            appUser.Twitter = request.Twitter;
+
+        if (request.Linkedin != null)
+            appUser.Linkedin = request.Linkedin;
+
+        if (request.Instagram != null)
+            appUser.Instagram = request.Instagram;
+
+        await _context.SaveChangesAsync(CancellationToken.None);
+        return true;
     }
 
     public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordRequest request)
@@ -198,7 +250,15 @@ public class AuthService : IAuthService
                 ProfilePhotoUrl = appUser?.ProfilePhotoUrl,
                 AccountType = appUser?.AccountType.ToString() ?? AccountType.Customer.ToString(),
                 LastLogin = appUser?.LastLogin,
-                CreatedAt = appUser?.Created.DateTime ?? DateTime.UtcNow
+                CreatedAt = appUser?.Created.DateTime ?? DateTime.UtcNow,
+                Bio = appUser?.Bio,
+                Country = appUser?.Country,
+                CityState = appUser?.CityState,
+                PostalCode = appUser?.PostalCode,
+                Facebook = appUser?.Facebook,
+                Twitter = appUser?.Twitter,
+                Linkedin = appUser?.Linkedin,
+                Instagram = appUser?.Instagram
             }
         });
     }

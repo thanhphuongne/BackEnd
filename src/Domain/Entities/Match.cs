@@ -21,7 +21,13 @@ public class Match : BaseAuditableEntity
     public int CurrentPlayers { get; set; } = 0;
     
     public string? Description { get; set; }
-    
+
+    public string? Title { get; set; }
+
+    public string? Phone { get; set; }
+
+    public string? Facebook { get; set; }
+
     public MatchPrivacy Privacy { get; set; }
     
     public MatchStatus Status { get; set; }
