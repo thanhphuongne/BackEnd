@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+#pragma warning disable CS8601 // Possible null reference assignment
+
 namespace BackEnd.Infrastructure.Services;
 
 public class MatchService : IMatchService
