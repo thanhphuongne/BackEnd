@@ -38,6 +38,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<BackEnd.Application.Common.Interfaces.IBookingService, BackEnd.Infrastructure.Services.BookingService>();
         builder.Services.AddScoped<BackEnd.Application.Common.Interfaces.IMatchService, BackEnd.Infrastructure.Services.MatchService>();
         builder.Services.AddScoped<BackEnd.Application.Interfaces.IAnalyticsService, BackEnd.Infrastructure.Services.AnalyticsService>();
+        builder.Services.AddScoped<BackEnd.Application.Interfaces.IOwnerService, BackEnd.Infrastructure.Services.OwnerService>();
 
         builder.Services
             .AddDefaultIdentity<ApplicationUser>()

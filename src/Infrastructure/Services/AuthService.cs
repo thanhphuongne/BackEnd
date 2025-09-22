@@ -229,6 +229,46 @@ public class AuthService : IAuthService
         return result.Succeeded;
     }
 
+    public async Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return true; // Don't reveal if email exists
+
+        // Generate reset code (in a real implementation, send email)
+        var resetCode = GenerateResetCode();
+        user.VerificationCode = resetCode;
+        await _userManager.UpdateAsync(user);
+
+        // TODO: Send email with reset code
+        _logger.LogInformation("Password reset code generated for {Email}: {Code}", request.Email, resetCode);
+
+        return true;
+    }
+
+    public async Task<bool> ResetPasswordAsync(ResetPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null || user.VerificationCode != request.ResetCode)
+            return false;
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+
+        if (result.Succeeded)
+        {
+            user.VerificationCode = null; // Clear the reset code
+            await _userManager.UpdateAsync(user);
+        }
+
+        return result.Succeeded;
+    }
+
+    private static string GenerateResetCode()
+    {
+        return new Random().Next(100000, 999999).ToString();
+    }
+
     private Task<AuthResponse> GenerateAuthResponseAsync(ApplicationUser identityUser, User? appUser)
     {
         var token = GenerateJwtToken(identityUser, appUser);

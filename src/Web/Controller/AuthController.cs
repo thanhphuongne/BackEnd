@@ -206,4 +206,41 @@ public class AuthController : ControllerBase
             accountType
         });
     }
+
+    /// <summary>
+    /// Request password reset
+    /// </summary>
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        _logger.LogInformation("🔑 Password reset requested for email: {Email}", request.Email);
+
+        var result = await _authService.ForgotPasswordAsync(request);
+        if (!result)
+            return BadRequest(new { message = "Failed to process password reset request" });
+
+        return Ok(new { message = "Password reset code sent to your email" });
+    }
+
+    /// <summary>
+    /// Reset password using reset code
+    /// </summary>
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        _logger.LogInformation("🔑 Password reset attempt for email: {Email}", request.Email);
+
+        var result = await _authService.ResetPasswordAsync(request);
+        if (!result)
+            return BadRequest(new { message = "Invalid reset code or email" });
+
+        _logger.LogInformation("✅ Password reset successful for email: {Email}", request.Email);
+        return Ok(new { message = "Password reset successfully" });
+    }
 }
