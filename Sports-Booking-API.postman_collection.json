@@ -1047,24 +1047,438 @@
 ]
 },
 {
- "name": "Users",
-"item": [
-{
-"name": "Get All Users",
-"request": {
-"method": "GET",
-"header": [],
-"url": {
-"raw": "https://localhost:5001/api/user",
-"protocol": "https",
-"host": ["localhost"],
-"port": "5001",
-"path": ["api", "user"]
-}
-}
-}
-]
-},
+  "name": "Users",
+  "item": [
+  {
+  "name": "Get All Users",
+  "request": {
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/user",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "user"]
+  }
+  }
+  }
+  ]
+  },
+  {
+  "name": "Owner",
+  "item": [
+  {
+  "name": "Get My Fields",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/fields",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "fields"]
+  }
+  }
+  },
+  {
+  "name": "Get Field Details",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/fields/1",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "fields", "1"]
+  }
+  }
+  },
+  {
+  "name": "Create Field",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "POST",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"name\": \"New Football Field\",\n  \"sport\": \"football\",\n  \"description\": \"New field description\",\n  \"location\": \"Quy Nhon\",\n  \"hourlyRate\": 200000,\n  \"peakRate\": 300000,\n  \"openTime\": \"06:00\",\n  \"closeTime\": \"22:00\",\n  \"capacity\": 22,\n  \"amenities\": [\"Parking\", \"Lighting\"],\n  \"images\": [\"image1.jpg\"]\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/owner/fields",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "fields"]
+  }
+  }
+  },
+  {
+  "name": "Update Field",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "PUT",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"name\": \"Updated Field Name\",\n  \"hourlyRate\": 250000\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/owner/fields/1",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "fields", "1"]
+  }
+  }
+  },
+  {
+  "name": "Delete Field",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "DELETE",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/fields/1",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "fields", "1"]
+  }
+  }
+  },
+  {
+  "name": "Get My Bookings",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/bookings",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "bookings"]
+  }
+  }
+  },
+  {
+  "name": "Get Booking Details",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/bookings/1",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "bookings", "1"]
+  }
+  }
+  },
+  {
+  "name": "Update Booking Status",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "PUT",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"status\": \"confirmed\",\n  \"notes\": \"Updated by owner\"\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/owner/bookings/1",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "bookings", "1"]
+  }
+  }
+  },
+  {
+  "name": "Cancel Booking",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "PUT",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/bookings/1/cancel",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "bookings", "1", "cancel"]
+  }
+  }
+  },
+  {
+  "name": "Get Analytics",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/analytics",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "analytics"]
+  }
+  }
+  },
+  {
+  "name": "Get Payment Settings",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "GET",
+  "header": [],
+  "url": {
+  "raw": "https://localhost:5001/api/owner/payment-settings",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "payment-settings"]
+  }
+  }
+  },
+  {
+  "name": "Update Payment Settings",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "PUT",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"commission\": 5,\n  \"acceptedMethods\": [\"cash\", \"bank_transfer\"],\n  \"bankDetails\": {\n    \"accountName\": \"Owner Name\",\n    \"accountNumber\": \"123456789\",\n    \"bankName\": \"Vietcombank\"\n  }\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/owner/payment-settings",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "payment-settings"]
+  }
+  }
+  },
+  {
+  "name": "Upload Avatar",
+  "request": {
+  "auth": {
+  "type": "bearer",
+  "bearer": [
+  {
+  "key": "token",
+  "value": "{{token}}",
+  "type": "string"
+  }
+  ]
+  },
+  "method": "POST",
+  "header": [],
+  "body": {
+  "mode": "formdata",
+  "formdata": [
+  {
+  "key": "avatar",
+  "type": "file",
+  "src": []
+  }
+  ]
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/owner/upload-avatar",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "owner", "upload-avatar"]
+  }
+  }
+  }
+  ]
+  },
+  {
+  "name": "Auth",
+  "item": [
+  {
+  "name": "Forgot Password",
+  "request": {
+  "method": "POST",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"email\": \"test@example.com\"\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/auth/forgot-password",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "auth", "forgot-password"]
+  }
+  }
+  },
+  {
+  "name": "Reset Password",
+  "request": {
+  "method": "POST",
+  "header": [
+  {
+  "key": "Content-Type",
+  "value": "application/json"
+  }
+  ],
+  "body": {
+  "mode": "raw",
+  "raw": "{\n  \"email\": \"test@example.com\",\n  \"resetCode\": \"123456\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+  },
+  "url": {
+  "raw": "https://localhost:5001/api/auth/reset-password",
+  "protocol": "https",
+  "host": ["localhost"],
+  "port": "5001",
+  "path": ["api", "auth", "reset-password"]
+  }
+  }
+  }
+  ]
+  },
 {
 "name": "Health Check",
 "request": {
